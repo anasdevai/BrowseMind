@@ -1,0 +1,537 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BrowserMind Tool Schemas",
+  "description": "JSON Schema definitions for all browser control tools/capabilities",
+  "version": "1.0.0",
+  "tools": {
+    "navigate": {
+      "name": "navigate",
+      "display_name": "Navigate to URL",
+      "description": "Navigate the active browser tab to a specified URL",
+      "category": "navigation",
+      "risk_level": "low",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "The URL to navigate to (must include protocol: http:// or https://)",
+            "pattern": "^https?://",
+            "minLength": 10,
+            "maxLength": 2048,
+            "examples": ["https://github.com", "https://example.com/page"]
+          },
+          "wait_until": {
+            "type": "string",
+            "description": "When to consider navigation complete",
+            "enum": ["load", "domcontentloaded", "networkidle"],
+            "default": "load"
+          },
+          "timeout_ms": {
+            "type": "integer",
+            "description": "Maximum time to wait for navigation (milliseconds)",
+            "minimum": 1000,
+            "maximum": 60000,
+            "default": 30000
+          }
+        },
+        "required": ["url"],
+        "additionalProperties": false
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "final_url": { "type": "string", "description": "URL after redirects" },
+          "title": { "type": "string", "description": "Page title" },
+          "load_time_ms": { "type": "integer" }
+        }
+      }
+    },
+    "click_element": {
+      "name": "click_element",
+      "display_name": "Click Element",
+      "description": "Click an element on the page using a CSS selector or text description",
+      "category": "interaction",
+      "risk_level": "medium",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "selector": {
+            "type": "string",
+            "description": "CSS selector for the element to click",
+            "minLength": 1,
+            "maxLength": 500,
+            "examples": ["button.submit", "#login-btn", "a[href='/about']"]
+          },
+          "text": {
+            "type": "string",
+            "description": "Alternative: text content to match (case-insensitive partial match)",
+            "minLength": 1,
+            "maxLength": 200,
+            "examples": ["Sign In", "Submit", "Learn More"]
+          },
+          "index": {
+            "type": "integer",
+            "description": "If multiple elements match, click the nth element (0-indexed)",
+            "minimum": 0,
+            "default": 0
+          },
+          "wait_for_navigation": {
+            "type": "boolean",
+            "description": "Wait for navigation after click",
+            "default": false
+          },
+          "timeout_ms": {
+            "type": "integer",
+            "minimum": 1000,
+            "maximum": 30000,
+            "default": 5000
+          }
+        },
+        "oneOf": [
+          { "required": ["selector"] },
+          { "required": ["text"] }
+        ],
+        "additionalProperties": false
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "element_found": { "type": "boolean" },
+          "element_clicked": { "type": "boolean" },
+          "matched_selector": { "type": "string" },
+          "navigation_occurred": { "type": "boolean" }
+        }
+      }
+    },
+    "type_text": {
+      "name": "type_text",
+      "display_name": "Type Text",
+      "description": "Type text into an input field or textarea",
+      "category": "interaction",
+      "risk_level": "medium",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "selector": {
+            "type": "string",
+            "description": "CSS selector for the input element",
+            "minLength": 1,
+            "maxLength": 500,
+            "examples": ["input[name='username']", "#search-box", "textarea.comment"]
+          },
+          "text": {
+            "type": "string",
+            "description": "Text to type into the field",
+            "minLength": 0,
+            "maxLength": 10000
+          },
+          "clear_first": {
+            "type": "boolean",
+            "description": "Clear existing text before typing",
+            "default": true
+          },
+          "press_enter": {
+            "type": "boolean",
+            "description": "Press Enter key after typing",
+            "default": false
+          },
+          "delay_ms": {
+            "type": "integer",
+            "description": "Delay between keystrokes (milliseconds, 0 for instant)",
+            "minimum": 0,
+            "maximum": 1000,
+            "default": 0
+          },
+          "timeout_ms": {
+            "type": "integer",
+            "minimum": 1000,
+            "maximum": 30000,
+            "default": 5000
+          }
+        },
+        "required": ["selector", "text"],
+        "additionalProperties": false
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "element_found": { "type": "boolean" },
+          "text_entered": { "type": "boolean" },
+          "final_value": { "type": "string" }
+        }
+      }
+    },
+    "extract_text": {
+      "name": "extract_text",
+      "display_name": "Extract Text",
+      "description": "Extract text content from elements on the page",
+      "category": "extraction",
+      "risk_level": "low",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "selector": {
+            "type": "string",
+            "description": "CSS selector for elements to extract text from",
+            "minLength": 1,
+            "maxLength": 500,
+            "examples": ["h1", ".article-content", "p.description"]
+          },
+          "all": {
+            "type": "boolean",
+            "description": "Extract from all matching elements (true) or just first (false)",
+            "default": false
+          },
+          "trim": {
+            "type": "boolean",
+            "description": "Trim whitespace from extracted text",
+            "default": true
+          },
+          "max_length": {
+            "type": "integer",
+            "description": "Maximum length of extracted text per element",
+            "minimum": 1,
+            "maximum": 100000,
+            "default": 10000
+          }
+        },
+        "required": ["selector"],
+        "additionalProperties": false
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "text": {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "array", "items": { "type": "string" } }
+            ]
+          },
+          "count": { "type": "integer", "description": "Number of elements matched" }
+        }
+      }
+    },
+    "extract_links": {
+      "name": "extract_links",
+      "display_name": "Extract Links",
+      "description": "Extract all links (anchor tags) from the page or a specific section",
+      "category": "extraction",
+      "risk_level": "low",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "selector": {
+            "type": "string",
+            "description": "CSS selector to limit extraction scope (default: entire page)",
+            "minLength": 1,
+            "maxLength": 500,
+            "default": "body"
+          },
+          "include_text": {
+            "type": "boolean",
+            "description": "Include link text in results",
+            "default": true
+          },
+          "filter_external": {
+            "type": "boolean",
+            "description": "Only include external links (different domain)",
+            "default": false
+          },
+          "filter_internal": {
+            "type": "boolean",
+            "description": "Only include internal links (same domain)",
+            "default": false
+          },
+          "max_links": {
+            "type": "integer",
+            "description": "Maximum number of links to return",
+            "minimum": 1,
+            "maximum": 1000,
+            "default": 100
+          }
+        },
+        "additionalProperties": false
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "links": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "href": { "type": "string" },
+                "text": { "type": "string" },
+                "title": { "type": "string" },
+                "is_external": { "type": "boolean" }
+              }
+            }
+          },
+          "count": { "type": "integer" }
+        }
+      }
+    },
+    "extract_tables": {
+      "name": "extract_tables",
+      "display_name": "Extract Tables",
+      "description": "Extract data from HTML tables on the page",
+      "category": "extraction",
+      "risk_level": "low",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "selector": {
+            "type": "string",
+            "description": "CSS selector for table elements",
+            "minLength": 1,
+            "maxLength": 500,
+            "default": "table"
+          },
+          "index": {
+            "type": "integer",
+            "description": "Extract specific table by index (0-indexed, -1 for all)",
+            "minimum": -1,
+            "default": -1
+          },
+          "include_headers": {
+            "type": "boolean",
+            "description": "Include table headers in results",
+            "default": true
+          },
+          "format": {
+            "type": "string",
+            "description": "Output format",
+            "enum": ["array", "objects"],
+            "default": "objects"
+          }
+        },
+        "additionalProperties": false
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "tables": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "headers": { "type": "array", "items": { "type": "string" } },
+                "rows": {
+                  "oneOf": [
+                    { "type": "array", "items": { "type": "array" } },
+                    { "type": "array", "items": { "type": "object" } }
+                  ]
+                }
+              }
+            }
+          },
+          "count": { "type": "integer" }
+        }
+      }
+    },
+    "scroll": {
+      "name": "scroll",
+      "display_name": "Scroll Page",
+      "description": "Scroll the page in a specified direction",
+      "category": "navigation",
+      "risk_level": "low",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "direction": {
+            "type": "string",
+            "description": "Scroll direction",
+            "enum": ["up", "down", "top", "bottom"],
+            "default": "down"
+          },
+          "amount": {
+            "type": "integer",
+            "description": "Scroll amount in pixels (ignored for 'top' and 'bottom')",
+            "minimum": 1,
+            "maximum": 10000,
+            "default": 500
+          },
+          "smooth": {
+            "type": "boolean",
+            "description": "Use smooth scrolling animation",
+            "default": true
+          },
+          "selector": {
+            "type": "string",
+            "description": "Optional: scroll specific element instead of page",
+            "minLength": 1,
+            "maxLength": 500
+          }
+        },
+        "additionalProperties": false
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "scroll_position": {
+            "type": "object",
+            "properties": {
+              "x": { "type": "integer" },
+              "y": { "type": "integer" }
+            }
+          },
+          "at_top": { "type": "boolean" },
+          "at_bottom": { "type": "boolean" }
+        }
+      }
+    },
+    "screenshot": {
+      "name": "screenshot",
+      "display_name": "Take Screenshot",
+      "description": "Capture a screenshot of the visible page or a specific element",
+      "category": "utility",
+      "risk_level": "low",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "selector": {
+            "type": "string",
+            "description": "Optional: CSS selector for specific element to screenshot",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "full_page": {
+            "type": "boolean",
+            "description": "Capture full page (scrolling if needed)",
+            "default": false
+          },
+          "format": {
+            "type": "string",
+            "description": "Image format",
+            "enum": ["png", "jpeg"],
+            "default": "png"
+          },
+          "quality": {
+            "type": "integer",
+            "description": "JPEG quality (1-100, ignored for PNG)",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 90
+          }
+        },
+        "additionalProperties": false
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "data_url": { "type": "string", "description": "Base64-encoded image data URL" },
+          "width": { "type": "integer" },
+          "height": { "type": "integer" },
+          "size_bytes": { "type": "integer" }
+        }
+      }
+    },
+    "get_dom": {
+      "name": "get_dom",
+      "display_name": "Get DOM Structure",
+      "description": "Extract the DOM structure of the page or a specific section",
+      "category": "extraction",
+      "risk_level": "low",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "selector": {
+            "type": "string",
+            "description": "CSS selector for root element (default: body)",
+            "minLength": 1,
+            "maxLength": 500,
+            "default": "body"
+          },
+          "max_depth": {
+            "type": "integer",
+            "description": "Maximum depth of DOM tree to extract",
+            "minimum": 1,
+            "maximum": 10,
+            "default": 5
+          },
+          "include_attributes": {
+            "type": "boolean",
+            "description": "Include element attributes in output",
+            "default": true
+          },
+          "include_text": {
+            "type": "boolean",
+            "description": "Include text content in output",
+            "default": true
+          },
+          "simplify": {
+            "type": "boolean",
+            "description": "Remove script, style, and comment nodes",
+            "default": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "dom": {
+            "type": "object",
+            "description": "Simplified DOM tree structure"
+          },
+          "node_count": { "type": "integer" }
+        }
+      }
+    },
+    "highlight_element": {
+      "name": "highlight_element",
+      "display_name": "Highlight Element",
+      "description": "Visually highlight an element on the page (for debugging/demonstration)",
+      "category": "utility",
+      "risk_level": "low",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "selector": {
+            "type": "string",
+            "description": "CSS selector for element to highlight",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "duration_ms": {
+            "type": "integer",
+            "description": "How long to show highlight (0 for permanent until cleared)",
+            "minimum": 0,
+            "maximum": 60000,
+            "default": 3000
+          },
+          "color": {
+            "type": "string",
+            "description": "Highlight color (CSS color value)",
+            "default": "rgba(255, 255, 0, 0.5)"
+          },
+          "clear_previous": {
+            "type": "boolean",
+            "description": "Clear previous highlights before adding new one",
+            "default": true
+          }
+        },
+        "required": ["selector"],
+        "additionalProperties": false
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "element_found": { "type": "boolean" },
+          "highlighted": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}
