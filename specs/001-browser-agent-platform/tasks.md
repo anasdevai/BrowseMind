@@ -52,7 +52,7 @@ This document breaks down the BrowserMind platform implementation into executabl
 - [x] T006 [P] Create extension/.env.example with backend URL configuration
 - [x] T007 [P] Set up backend virtual environment using uv (uv venv)
 - [x] T008 [P] Install backend dependencies (FastAPI, OpenAI SDK, SQLAlchemy, cryptography, structlog)
-- [ ] T009 [P] Install extension dependencies (Plasmo, React, TailwindCSS, shadcn/ui, Zustand)
+- [X] T009 [P] Install extension dependencies (Plasmo, React, TailwindCSS, shadcn/ui, Zustand)
 - [x] T010 [P] Configure TailwindCSS for extension in tailwind.config.js
 - [x] T011 [P] Configure TypeScript for extension in tsconfig.json (strict mode)
 - [x] T012 [P] Set up pytest configuration in backend/pytest.ini
@@ -201,17 +201,17 @@ This document breaks down the BrowserMind platform implementation into executabl
 
 #### Assistant Management UI
 
-- [ ] T071 [US2] Create AssistantList component in extension/src/sidepanel/AssistantList.tsx (list, status badges)
-- [ ] T072 [US2] Create CreateAssistantForm component in extension/src/sidepanel/CreateAssistantForm.tsx (name, instructions, capabilities)
-- [ ] T073 [US2] Implement capability selector in extension/src/sidepanel/CapabilitySelector.tsx (checkboxes, max 10 validation)
-- [ ] T074 [US2] Add assistant actions (activate, deactivate, delete) in extension/src/sidepanel/AssistantList.tsx
-- [ ] T075 [US2] Update Zustand store with assistant management actions in extension/src/lib/store.ts
+- [X] T071 [US2] Create AssistantList component in extension/src/sidepanel/AssistantList.tsx (list, status badges)
+- [X] T072 [US2] Create CreateAssistantForm component in extension/src/sidepanel/CreateAssistantForm.tsx (name, instructions, capabilities)
+- [X] T073 [US2] Implement capability selector in extension/src/sidepanel/CapabilitySelector.tsx (checkboxes, max 10 validation)
+- [X] T074 [US2] Add assistant actions (activate, deactivate, delete) in extension/src/sidepanel/AssistantList.tsx
+- [X] T075 [US2] Update Zustand store with assistant management actions in extension/src/lib/store.ts
 
 #### Integration
 
-- [ ] T076 [US2] Connect create_assistant form to WebSocket in extension/src/sidepanel/CreateAssistantForm.tsx
-- [ ] T077 [US2] Implement assistant list sync on connection in extension/src/background/websocket-client.ts
-- [ ] T078 [US2] Add active assistant indicator in extension/src/sidepanel/Chat.tsx header
+- [X] T076 [US2] Connect create_assistant form to WebSocket in extension/src/sidepanel/CreateAssistantForm.tsx
+- [X] T077 [US2] Implement assistant list sync on connection in extension/src/background/websocket-client.ts
+- [X] T078 [US2] Add active assistant indicator in extension/src/sidepanel/Chat.tsx header
 
 ---
 
@@ -242,16 +242,16 @@ This document breaks down the BrowserMind platform implementation into executabl
 
 #### Session Management UI
 
-- [ ] T085 [US3] Create SessionList component in extension/src/sidepanel/SessionList.tsx (list, timestamps, archive button)
-- [ ] T086 [US3] Implement session switching in extension/src/sidepanel/SessionList.tsx (loads conversation history)
-- [ ] T087 [US3] Add "New Session" button in extension/src/sidepanel/Chat.tsx
-- [ ] T088 [US3] Update Zustand store with session management in extension/src/lib/store.ts
+- [X] T085 [US3] Create SessionList component in extension/src/sidepanel/SessionList.tsx (list, timestamps, archive button)
+- [X] T086 [US3] Implement session switching in extension/src/sidepanel/SessionList.tsx (loads conversation history)
+- [X] T087 [US3] Add "New Session" button in extension/src/sidepanel/Chat.tsx
+- [X] T088 [US3] Update Zustand store with session management in extension/src/lib/store.ts
 
 #### Integration
 
-- [ ] T089 [US3] Load active session on extension startup in extension/src/background/index.ts
-- [ ] T090 [US3] Sync conversation history to UI on session switch in extension/src/lib/store.ts
-- [ ] T091 [US3] Implement optimistic UI updates for messages in extension/src/sidepanel/Chat.tsx
+- [X] T089 [US3] Load active session on extension startup in extension/src/background/index.ts
+- [X] T090 [US3] Sync conversation history to UI on session switch in extension/src/lib/store.ts
+- [X] T091 [US3] Implement optimistic UI updates for messages in extension/src/sidepanel/Chat.tsx
 
 ---
 
@@ -273,23 +273,23 @@ This document breaks down the BrowserMind platform implementation into executabl
 
 #### Concurrent Execution Backend
 
-- [ ] T092 [P] [US4] Implement concurrent command execution in backend/app/websocket/queue.py (asyncio, max 5)
-- [ ] T093 [P] [US4] Add command cancellation in backend/app/websocket/queue.py
-- [ ] T094 [P] [US4] Implement queue_status message in backend/app/websocket/handler.py (queued, in_progress)
-- [ ] T095 [US4] Add resource monitoring in backend/app/agents/base_agent.py (memory, execution time)
-- [ ] T096 [US4] Implement graceful degradation when queue full in backend/app/websocket/queue.py
+- [X] T092 [P] [US4] Implement concurrent command execution in backend/app/websocket/queue.py (asyncio, max 5)
+- [X] T093 [P] [US4] Add command cancellation in backend/app/websocket/queue.py
+- [X] T094 [P] [US4] Implement queue_status message in backend/app/websocket/handler.py (queued, in_progress)
+- [X] T095 [US4] Add resource monitoring in backend/app/agents/base_agent.py (memory, execution time)
+- [X] T096 [US4] Implement graceful degradation when queue full in backend/app/websocket/queue.py
 
 #### Queue Management UI
 
-- [ ] T097 [US4] Create CommandQueue component in extension/src/sidepanel/CommandQueue.tsx (list, status, cancel button)
-- [ ] T098 [US4] Add queue status indicator in extension/src/sidepanel/StatusIndicator.tsx (X queued, Y executing)
-- [ ] T099 [US4] Implement command cancellation in extension/src/sidepanel/CommandQueue.tsx
-- [ ] T100 [US4] Update Zustand store with queue management in extension/src/lib/store.ts
+- [X] T097 [US4] Create CommandQueue component in extension/src/sidepanel/CommandQueue.tsx (list, status, cancel button)
+- [X] T098 [US4] Add queue status indicator in extension/src/sidepanel/StatusIndicator.tsx (X queued, Y executing)
+- [X] T099 [US4] Implement command cancellation in extension/src/sidepanel/CommandQueue.tsx
+- [X] T100 [US4] Update Zustand store with queue management in extension/src/lib/store.ts
 
 #### Integration
 
-- [ ] T101 [US4] Connect queue_status updates to UI in extension/src/lib/store.ts
-- [ ] T102 [US4] Add visual feedback for queued vs executing commands in extension/src/sidepanel/Chat.tsx
+- [X] T101 [US4] Connect queue_status updates to UI in extension/src/lib/store.ts
+- [X] T102 [US4] Add visual feedback for queued vs executing commands in extension/src/sidepanel/Chat.tsx
 
 ---
 
@@ -308,55 +308,55 @@ This document breaks down the BrowserMind platform implementation into executabl
 
 #### Testing
 
-- [ ] T103 [P] Write unit tests for database models in backend/tests/unit/test_models.py
-- [ ] T104 [P] Write unit tests for encryption utilities in backend/tests/unit/test_encryption.py
-- [ ] T105 [P] Write unit tests for tool implementations in backend/tests/unit/test_tools.py
-- [ ] T106 [P] Write unit tests for permission validator in backend/tests/unit/test_permissions.py
-- [ ] T107 [P] Write unit tests for agent orchestration in backend/tests/unit/test_agents.py
-- [ ] T108 [P] Write integration tests for WebSocket protocol in backend/tests/integration/test_websocket.py
-- [ ] T109 [P] Write integration tests for agent lifecycle in backend/tests/integration/test_agent_lifecycle.py
-- [ ] T110 [P] Write integration tests for session persistence in backend/tests/integration/test_persistence.py
-- [ ] T111 [P] Write unit tests for DOM controller in extension/tests/unit/dom-controller.test.ts
-- [ ] T112 [P] Write unit tests for element selector in extension/tests/unit/element-selector.test.ts
-- [ ] T113 Write E2E test for basic navigation in extension/tests/e2e/browser-control.spec.ts using Playwright
-- [ ] T114 Write E2E test for assistant creation in extension/tests/e2e/assistant-management.spec.ts
-- [ ] T115 Write E2E test for session persistence in extension/tests/e2e/session-persistence.spec.ts
-- [ ] T115a Write integration test for memory isolation between assistants in backend/tests/integration/test_memory_isolation.py (verify assistant A cannot access assistant B's session data)
+- [X] T103 [P] Write unit tests for database models in backend/tests/unit/test_models.py
+- [X] T104 [P] Write unit tests for encryption utilities in backend/tests/unit/test_encryption.py
+- [X] T105 [P] Write unit tests for tool implementations in backend/tests/unit/test_tools.py
+- [X] T106 [P] Write unit tests for permission validator in backend/tests/unit/test_permissions.py
+- [X] T107 [P] Write unit tests for agent orchestration in backend/tests/unit/test_agents.py
+- [X] T108 [P] Write integration tests for WebSocket protocol in backend/tests/integration/test_websocket.py
+- [X] T109 [P] Write integration tests for agent lifecycle in backend/tests/integration/test_agent_lifecycle.py
+- [X] T110 [P] Write integration tests for session persistence in backend/tests/integration/test_persistence.py
+- [X] T111 [P] Write unit tests for DOM controller in extension/tests/unit/dom-controller.test.ts
+- [X] T112 [P] Write unit tests for element selector in extension/tests/unit/element-selector.test.ts
+- [X] T113 Write E2E test for basic navigation in extension/tests/e2e/browser-control.spec.ts using Playwright
+- [X] T114 Write E2E test for assistant creation in extension/tests/e2e/assistant-management.spec.ts
+- [X] T115 Write E2E test for session persistence in extension/tests/e2e/session-persistence.spec.ts
+- [X] T115a Write integration test for memory isolation between assistants in backend/tests/integration/test_memory_isolation.py (verify assistant A cannot access assistant B's session data)
 
 #### Security & Performance
 
-- [ ] T116 [P] Implement input sanitization for all user inputs in backend/app/tools/sanitizer.py
-- [ ] T117 [P] Add CSP headers in extension manifest.json
-- [ ] T118 [P] Implement SQL injection prevention (parameterized queries) in backend/app/db/models.py
-- [ ] T119 [P] Add XSS prevention (DOMPurify) in extension/src/sidepanel/MessageList.tsx
-- [ ] T120 [P] Implement rate limiting per connection in backend/app/websocket/rate_limiter.py
-- [ ] T121 Optimize database queries with indexes in backend/app/db/models.py
-- [ ] T122 Implement connection pooling in backend/app/db/session.py
-- [ ] T123 Add performance monitoring in backend/app/logging_config.py (execution time, memory)
-- [ ] T123a Implement command success rate tracking in backend/app/websocket/handler.py (track success/failure per command type, expose metrics endpoint)
+- [X] T116 [P] Implement input sanitization for all user inputs in backend/app/tools/sanitizer.py
+- [X] T117 [P] Add CSP headers in extension manifest.json
+- [X] T118 [P] Implement SQL injection prevention (parameterized queries) in backend/app/db/models.py
+- [X] T119 [P] Add XSS prevention (DOMPurify) in extension/src/sidepanel/MessageList.tsx
+- [X] T120 [P] Implement rate limiting per connection in backend/app/websocket/rate_limiter.py
+- [X] T121 Optimize database queries with indexes in backend/app/db/models.py
+- [X] T122 Implement connection pooling in backend/app/db/session.py
+- [X] T123 Add performance monitoring in backend/app/logging_config.py (execution time, memory)
+- [X] T123a Implement command success rate tracking in backend/app/websocket/handler.py (track success/failure per command type, expose metrics endpoint)
 
 #### Observability
 
-- [ ] T124 [P] Implement structured logging for all tool executions in backend/app/tools/base.py
-- [ ] T125 [P] Add correlation IDs for request tracing in backend/app/websocket/handler.py
-- [ ] T126 [P] Implement log rotation in backend/app/logging_config.py
-- [ ] T127 Create separate log files (agents.log, tools.log, websocket.log, errors.log) in backend/app/logging_config.py
+- [X] T124 [P] Implement structured logging for all tool executions in backend/app/tools/base.py
+- [X] T125 [P] Add correlation IDs for request tracing in backend/app/websocket/handler.py
+- [X] T126 [P] Implement log rotation in backend/app/logging_config.py
+- [X] T127 Create separate log files (agents.log, tools.log, websocket.log, errors.log) in backend/app/logging_config.py
 
 #### Documentation
 
-- [ ] T128 [P] Update backend/README.md with complete setup instructions using uv
-- [ ] T129 [P] Update extension/README.md with build and installation instructions
-- [ ] T130 [P] Create API documentation using FastAPI OpenAPI in backend/app/main.py
-- [ ] T131 [P] Document WebSocket protocol in backend/README.md
-- [ ] T132 [P] Create troubleshooting guide in specs/001-browser-agent-platform/troubleshooting.md
-- [ ] T133 Create deployment guide in specs/001-browser-agent-platform/deployment.md
+- [X] T128 [P] Update backend/README.md with complete setup instructions using uv
+- [X] T129 [P] Update extension/README.md with build and installation instructions
+- [X] T130 [P] Create API documentation using FastAPI OpenAPI in backend/app/main.py
+- [X] T131 [P] Document WebSocket protocol in backend/README.md
+- [X] T132 [P] Create troubleshooting guide in specs/001-browser-agent-platform/troubleshooting.md
+- [X] T133 Create deployment guide in specs/001-browser-agent-platform/deployment.md
 
 #### Build & Deployment
 
-- [ ] T134 [P] Create production build script for extension in extension/package.json
-- [ ] T135 [P] Create Docker configuration for backend in backend/Dockerfile
-- [ ] T136 [P] Create docker-compose.yml for local development
-- [ ] T137 Create GitHub Actions workflow for CI/CD in .github/workflows/ci.yml
+- [X] T134 [P] Create production build script for extension in extension/package.json
+- [X] T135 [P] Create Docker configuration for backend in backend/Dockerfile
+- [X] T136 [P] Create docker-compose.yml for local development
+- [X] T137 Create GitHub Actions workflow for CI/CD in .github/workflows/ci.yml
 
 ---
 

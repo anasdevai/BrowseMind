@@ -19,7 +19,21 @@
       "Bash(bash .specify/scripts/bash/create-phr.sh --title \"Phase 1 and 2 Implementation Complete\" --stage \"green\" --feature \"001-browser-agent-platform\" --json)",
       "Bash(backend/app/agents/__init__.py:*)",
       "Bash(backend/app/tools/__init__.py:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(pip install:*)",
+      "Bash(backend/app/config/__init__.py:*)",
+      "Bash(README.md:*)",
+      "Bash(chmod:*)",
+      "Bash(FINAL_SUMMARY.md:*)",
+      "Bash(COMPLETION_STATUS.md:*)",
+      "Bash(bc)",
+      "Bash(pip search \"openai agent\")",
+      "Bash(.venv/Scripts/python.exe -m pip install:*)",
+      "Bash(npm run dev)",
+      "Bash(npm install:*)",
+      "Bash(cat:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)"
     ]
   }
 }

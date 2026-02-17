@@ -17,10 +17,6 @@ class Settings(BaseSettings):
         extra="ignore"
     )
 
-    # OpenAI Configuration
-    openai_api_key: str
-    openai_model: str = "gpt-4-turbo-preview"
-
     # Database Configuration
     database_url: str = "sqlite:///./browsermind.db"
     database_encryption_key: str

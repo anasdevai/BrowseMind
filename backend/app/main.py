@@ -17,6 +17,9 @@ from app.websocket.handler import get_message_handler
 from app.websocket.manager import get_connection_manager
 from app.websocket.protocol import get_protocol_info
 from app.websocket.rate_limiter import get_rate_limiter
+from app.websocket.queue import get_command_queue
+from app.agents.agent_sdk_orchestrator import get_agent_sdk_orchestrator
+from app.config.openrouter import get_llm_config
 
 
 @asynccontextmanager
@@ -35,6 +38,21 @@ async def lifespan(app: FastAPI):
     # Initialize database
     init_database()
     print("[OK] Database initialized")
+
+    # Initialize LLM configuration
+    llm_config = get_llm_config()
+    print(f"[OK] LLM provider: {llm_config.llm_provider}")
+    print(f"[OK] Model: {llm_config.default_model if llm_config.llm_provider == 'openrouter' else 'gpt-4-turbo-preview'}")
+
+    # Initialize Agent SDK orchestrator with multi-agent handoffs
+    orchestrator = get_agent_sdk_orchestrator()
+    print("[OK] OpenAI Agent SDK orchestrator initialized")
+    print("[OK] Multi-agent system: Coordinator + 3 specialists (Navigation, Extraction, Interaction)")
+
+    # Initialize command queue
+    command_queue = get_command_queue()
+    await command_queue.start_timeout_monitor()
+    print("[OK] Command queue initialized")
 
     # Start connection manager heartbeat monitor
     connection_manager = get_connection_manager()

@@ -196,6 +196,44 @@ class CommandQueue:
 
         print(f"Command failed: {command_id} - {error}")
 
+    async def cancel_command(self, command_id: str) -> bool:
+        """
+        Cancel a queued or executing command.
+
+        Args:
+            command_id: Command ID to cancel
+
+        Returns:
+            True if cancelled, False if not found or already completed
+        """
+        return await self.cancel(command_id)
+
+    def get_status(self) -> dict:
+        """
+        Get detailed queue status with command list.
+
+        Returns:
+            Dictionary with queue status and command details
+        """
+        commands_list = []
+        for cmd in self._commands.values():
+            commands_list.append({
+                "id": cmd.id,
+                "assistant_id": cmd.assistant_id,
+                "session_id": cmd.session_id,
+                "status": cmd.status.value,
+                "queued_at": cmd.queued_at.isoformat(),
+                "elapsed_time": cmd.get_elapsed_time(),
+            })
+
+        return {
+            "queued": sum(len(cmds) for cmds in self._queued_by_assistant.values()),
+            "executing": len(self._executing),
+            "max_concurrent": self.max_concurrent,
+            "max_queued": self.max_queued_per_assistant,
+            "commands": commands_list,
+        }
+
     async def cancel(self, command_id: str) -> bool:
         """
         Cancel a queued or executing command.

@@ -10,8 +10,8 @@ from uuid import uuid4
 from fastapi import WebSocket
 from sqlalchemy.orm import Session
 
-from app.agents.main_agent import MainAgent
-from app.db.models import Assistant, Message, Session as DBSession
+from app.agents.agent_sdk_orchestrator import get_agent_sdk_orchestrator
+from app.db.models import Assistant, AssistantCapability, Capability, Message, Session as DBSession
 from app.db.session import get_db_session
 from app.tools.permission_validator import PermissionValidator
 from app.websocket.manager import ConnectionManager
@@ -26,7 +26,7 @@ class MessageHandler:
 
     def __init__(self, connection_manager: ConnectionManager):
         self.connection_manager = connection_manager
-        self.agent = MainAgent()
+        self.orchestrator = get_agent_sdk_orchestrator()
         self.command_queue = CommandQueue()
 
         # Message type handlers: type -> handler function
@@ -101,10 +101,15 @@ class MessageHandler:
         accumulated_content = ""
 
         try:
-            async for chunk in self.agent.stream_command(
+            async for chunk in self.orchestrator.stream_command(
                 command=command_text,
+                assistant_id=assistant_id,
+                session_id=session_id,
+                assistant_name=assistant.name,
+                instructions=assistant.instructions,
+                capabilities=capabilities,
                 conversation_history=conversation_history,
-                available_capabilities=capabilities
+                context={"session_id": session_id, "assistant_id": assistant_id}
             ):
                 chunk_type = chunk.get("type")
 
@@ -517,12 +522,17 @@ class MessageHandler:
             message["id"]
         )
 
-        # Process command with agent
+        # Process command with orchestrator
         try:
-            response = await self.agent.process_command(
+            response = await self.orchestrator.execute_command(
                 command=command_text,
+                assistant_id=assistant_id,
+                session_id=session_id,
+                assistant_name=assistant.name,
+                instructions=assistant.instructions,
+                capabilities=capabilities,
                 conversation_history=conversation_history,
-                available_capabilities=capabilities
+                context={"session_id": session_id, "assistant_id": assistant_id}
             )
 
             # Save assistant response
@@ -649,9 +659,41 @@ class MessageHandler:
 
     async def _handle_cancel_command(self, connection_id: str, message: dict) -> None:
         """Handle command cancellation request."""
-        # TODO: Implement in Phase 6 (User Story 4)
-        # Will cancel queued command
         await self._send_ack(connection_id, message["id"])
+
+        payload = message.get("payload", {})
+        command_id = payload.get("command_id")
+
+        if not command_id:
+            await self._send_error(
+                connection_id,
+                "Missing command_id",
+                "MISSING_COMMAND_ID",
+                correlation_id=message["id"]
+            )
+            return
+
+        # Cancel command in queue
+        success = await self.command_queue.cancel_command(command_id)
+
+        if success:
+            await self.connection_manager.send_message(connection_id, {
+                "type": "command_cancelled",
+                "id": str(uuid4()),
+                "timestamp": int(datetime.utcnow().timestamp() * 1000),
+                "correlation_id": message["id"],
+                "payload": {
+                    "command_id": command_id,
+                    "status": "cancelled"
+                }
+            })
+        else:
+            await self._send_error(
+                connection_id,
+                f"Command {command_id} not found or cannot be cancelled",
+                "CANCEL_FAILED",
+                correlation_id=message["id"]
+            )
 
     async def _handle_list_assistants(self, connection_id: str, message: dict) -> None:
         """Handle request for assistant list."""
@@ -952,9 +994,25 @@ class MessageHandler:
 
     async def _handle_get_queue_status(self, connection_id: str, message: dict) -> None:
         """Handle queue status request."""
-        # TODO: Implement in Phase 6 (User Story 4)
-        # Will return current queue state
         await self._send_ack(connection_id, message["id"])
+
+        # Get queue status
+        status = self.command_queue.get_status()
+
+        # Send queue status
+        await self.connection_manager.send_message(connection_id, {
+            "type": "queue_status",
+            "id": str(uuid4()),
+            "timestamp": int(datetime.utcnow().timestamp() * 1000),
+            "correlation_id": message["id"],
+            "payload": {
+                "queued": status["queued"],
+                "executing": status["executing"],
+                "max_concurrent": status["max_concurrent"],
+                "max_queued": status["max_queued"],
+                "commands": status["commands"]
+            }
+        })
 
     async def _handle_archive_session(self, connection_id: str, message: dict) -> None:
         """Handle session archiving request."""
